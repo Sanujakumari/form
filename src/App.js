@@ -5,13 +5,15 @@ import ReactDOM from "react-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { BrowserRouter as Router } from "react-router-dom";
-import { Routes, Route, Link } from "react-router-dom";
+import { Switch, Route, Link } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import CardContent from "@mui/material/CardContent";
 import Card from "@mui/material/Card";
+import { useState } from "react";
+
 
 function App() {
   const data = [
@@ -40,47 +42,50 @@ function App() {
       employee_code: "1245836",
     },
   ];
-  const navigate = useNavigate();
+  const history = useHistory();
   return (
     <div className="App">
-      
-      <HomePage />
-
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
-            <Button color="inherit">Home</Button>
-            <Button onClick={() => navigate("/view")} color="inherit">
+            <Button onClick={() => history.push("/home")} color="inherit">
+              Home
+            </Button>
+            <Button onClick={() => history.push("/view")} color="inherit">
               View Data
             </Button>
-            <Button onClick={() => navigate("/add")} color="inherit">
+            <Button onClick={() => history.push("/add")} color="inherit">
               Add Data
             </Button>
-            <Button onClick={() => navigate("/edit")} color="inherit">
+            <Button onClick={() => history.push("/edit")} color="inherit">
               Edit Data
             </Button>
-            <Button onClick={() => navigate("/delete")} color="inherit">
+            <Button onClick={() => history.push("/delete")} color="inherit">
               Delete Data
             </Button>
           </Toolbar>
         </AppBar>
       </Box>
-      <Routes>
-      <Route path="/add">
-      component= {AddData}
-      </Route>
-      <Route path="/view">
-      component= {ViewData}
-      </Route>
-      <Route path="/edit">
-      component= {EditData}
-      </Route>
-     
+      <Switch>
+        {/* component= {HomePage} / */}
+        <Route path="/home">
+          <HomePage />
+        </Route>
+
+        <Route path="/add">
+          <AddData />
+        </Route>
+
+        <Route path="/view">
+          <Form data={data} name age email employee_code />
+        </Route>
+        <Route path="/edit">
+          <EditData />
+        </Route>
+
         <Route path="**">{NotFound}</Route>
-      </Routes>
-     
+      </Switch>
     </div>
-     
   );
 }
 function HomePage() {
@@ -105,6 +110,8 @@ function Form({ data }) {
   );
 }
 function ViewData({ name, age, email, employee_code }) {
+  // data.forEach((element)=>{
+
   return (
     <card>
       <div className="formhouse">
@@ -123,9 +130,23 @@ function ViewData({ name, age, email, employee_code }) {
     //   <h1 className="name">{name}  {age}  {email}  {employee_code} </h1>
     // </div>
   );
+  //})
 }
 
 function AddData() {
+  const [name, setName] = useState("");
+    const [age, setAge] = useState("");
+    const [email, setEmail] = useState("");
+    const [employee_code, setEmployee_code] = useState("");
+    const history=useHistory();
+  
+    const setAddName = (event) => setName(event.target.value);
+    const setAddAge = (event) => setAge(event.target.value);
+    const setAddEmail = (event) => setEmail(event.target.value);
+    const setAddEmployee_code = (event) => setEmployee_code(event.target.value);
+  
+    
+         
   return (
     <div>
       <TextField
@@ -160,6 +181,7 @@ function AddData() {
     </div>
   );
 }
+
 function EditData() {
   return (
     <div>
